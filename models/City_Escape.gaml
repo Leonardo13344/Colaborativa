@@ -10,15 +10,15 @@
 model City_Escape
 
 global {
-	file shapefile_roads <- file("../includes/Calles_Bicentenario2.shp");
+	file shapefile_roads <- file("../includes/Calles_Bicentenario2.shp"); //8.15km en total
 	file shapefile_hazard <- file("../includes/Neo_Hazard.shp");
 	file shapefile_shelters <- file("../includes/Neo_Shelters.shp");
 	geometry shape <- envelope(shapefile_roads);
 	graph road_network;
 	map<road,float> current_weights;
 	
-	float hazard_distance <- 400.0;
-	float catastrophe_distance <- 100.0;
+	float hazard_distance <- 400.0; //400m de radio 
+	float catastrophe_distance <- 100.0;// 100m de distancia
 	float proba_detect_hazard <- 0.2;
 	float proba_detect_other_escape <- 0.01;
 	float other_distance <- 10.0;
