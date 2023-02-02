@@ -10,9 +10,9 @@
 model City_Escape
 
 global {
-	file shapefile_roads <- file("../includes/Calles_Bicentenario2.shp"); //8.15km en total
-	file shapefile_hazard <- file("../includes/Neo_Hazard.shp");
-	file shapefile_shelters <- file("../includes/Neo_Shelters.shp");
+	file shapefile_roads <- file("../includes/Neo_Roads.shp"); //8.15km en total
+	file shapefile_hazard <- file("../includes/Hazard.shp");
+	file shapefile_shelters <- file("../includes/Shelters.shp");
 	geometry shape <- envelope(shapefile_roads);
 	graph road_network;
 	map<road,float> current_weights;
