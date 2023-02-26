@@ -1,10 +1,11 @@
 /**-
-* Name: City Evacuation
-* Author: Mathieu Bourgais & Patrick Taillandier
-* Description:  Example model concerning the  use of the simpleBDI plug-in  with emotions. 
-* A technological accident is simulated in one of the buildings of the city center.
-
-* Tags: simple_bdi, emotion, evacuation
+* 
+* INTEGRANTES:
+* CHACON GALARZA KENLLY LENIN
+* MONTERO AGUILAR ANTHONNY ALEXANDER
+* SÚÑIGA GARCÍA LEONARDO RAFAEL
+* ZAMBRANO CORDOVA ERICK SEBASTIAN
+* 
 */
  
 model City_Escape
