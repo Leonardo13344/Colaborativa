@@ -24,6 +24,8 @@ global {
 	float proba_detect_other_escape <- 0.01;
 	float other_distance <- 10.0;
 	
+	int cont <- 0;
+	
 	init {
 		create road from: shapefile_roads;
 		create hazard from: shapefile_hazard;
@@ -50,6 +52,13 @@ global {
       	}
       	road_network <- as_edge_graph(road);
       	current_weights <- road as_map (each::each.shape.perimeter);
+      	
+      	//Definimos cuantos agentes 
+      	create people2 number:10{
+      		location <- any_location_in(one_of(road));
+      		do add_desire(at_target);
+      		
+      	}
 	}
 	
 	reflex update_speeds when: every(10#cycle){
@@ -57,7 +66,8 @@ global {
 		road_network <- road_network with_weights current_weights;
 	}
 	
-	reflex stop_sim when: empty(people) {
+	reflex stop_sim when: length(people) < 5 {
+		write "Agentes en shelters: " + cont;
 		do pause;
 	}
 }
@@ -156,6 +166,7 @@ species people skills: [moving] control: simple_bdi{
 		else  {
 			do goto target: target on: road_network move_weights: current_weights recompute_path: false;
 			if (target = location)  {
+				cont <- cont + 1;
 				do die;
 			}		
 		}
@@ -171,6 +182,7 @@ species people skills: [moving] control: simple_bdi{
 		else  {
 			do goto target: target on: road_network move_weights: current_weights recompute_path: false;
 			if (target = location)  {
+				cont <- cont + 1;
 				do die;
 			}		
 		}
@@ -190,6 +202,34 @@ species people skills: [moving] control: simple_bdi{
 	}
 }
 
+//definimos la segunda especie que se mueva por el mapa con los datos necesarios
+species people2 skills:[moving] control: simple_bdi{
+	point target;
+	float speed <- 30 #km/#h;
+	rgb color <- #cyan;
+	bool escape_mode <- false;
+	bool fearful;
+	bool noTarget<-true;
+	
+	predicate at_target <- new_predicate("at_target");
+	
+	plan normal_move intention: at_target  {
+		if (target = nil) {
+			target <- any_location_in(one_of(road));
+		} else {
+			do goto target: target on: road_network move_weights: current_weights recompute_path: false;
+			if (target = location)  {
+				target <- nil;
+				noTarget<-true;
+			}
+		}
+	}
+	
+	aspect default {
+		draw triangle(30) rotate: heading + 90 color: color;
+	}
+}
+
 species road {
 	float capacity <- 1 + shape.perimeter/50;
 	int nb_people <- 0 update: length(people at_distance 1);
@@ -201,6 +241,7 @@ species road {
 }
 
 species shelter {
+	int agentes;
 	aspect default {
 		draw circle(30) color: rgb(#gamablue,0.8) border: #gamablue depth:10;
 	}
@@ -228,6 +269,7 @@ experiment main type: gui {
 			species shelter refresh: false;
 			species road refresh: false;
 			species people;
+			species people2;//lo definimos en el experimento
 			species catastrophe;
 			species hazard;
 		}
